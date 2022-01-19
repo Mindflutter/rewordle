@@ -1,0 +1,23 @@
+version: "3"
+services:
+  db:
+    container_name: rewordle_db
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "rewordle"
+      POSTGRES_PASSWORD: "rewordle"
+      POSTGRES_DB: "rewordle"
+
+  service:
+    image: "rewordle:local"
+    container_name: rewordle
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_DSN: "postgresql+asyncpg://rewordle:rewordle@rewordle_db:5432/rewordle"
