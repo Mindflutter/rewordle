@@ -54,8 +54,8 @@ async def db_data():
     Test data is truncated at the end of each test.
     """
     async with db.session_maker() as session:
-        example = Game(name="test", description="description")
-        session.add(example)
+        game = Game(word="audio")
+        session.add(game)
         await session.commit()
 
     yield

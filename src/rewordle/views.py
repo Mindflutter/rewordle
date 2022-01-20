@@ -3,16 +3,10 @@ import random
 
 from fastapi import APIRouter, Path
 from fastapi.responses import JSONResponse
-from sqlalchemy.exc import IntegrityError, NoResultFound
+from sqlalchemy.exc import NoResultFound
 
 from db.game import Game
-from rewordle.models import (
-    DUPLICATE_RESPONSE,
-    NOT_FOUND_RESPONSE,
-    GuessAttemptResponse,
-    GuessPayload,
-    StartGameResponse,
-)
+from rewordle.models import NOT_FOUND_RESPONSE, GuessAttemptResponse, GuessPayload, StartGameResponse
 
 router = APIRouter(prefix="/rewordle")
 logger = logging.getLogger(__name__)
@@ -51,7 +45,7 @@ async def guess_attempt(guess_payload: GuessPayload, game_id: int = Path(None, g
     try:
         secret_word = await Game.process_attempt(game_id)
     except NoResultFound:
-        logger.error(f"Example id {game_id} not found")
+        logger.error(f"Game id {game_id} not found")
         return JSONResponse(status_code=404, content={"message": f"Game id {game_id} not found"})
 
     response_dict = {}

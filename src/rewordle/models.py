@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field, validator
 
 
@@ -29,4 +27,3 @@ NOT_FOUND_RESPONSE = {
     "model": ErrorResponse,
     "description": "Returned when word was not found in the dictionary or game id was not found in the database",
 }
-DUPLICATE_RESPONSE = {"model": ErrorResponse, "description": "Item already exists"}
