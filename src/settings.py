@@ -17,6 +17,10 @@ class Settings(BaseSettings):
 settings = Settings()
 
 PROJECT_ROOT = Path(__file__).parents[1]
+DICTIONARY_PATH = PROJECT_ROOT / "src/resources/dictionary.txt"
+# load dictionary
+with open(DICTIONARY_PATH) as dict_file:
+    WORDS = dict_file.read().splitlines()
 
 LOGGING_CONFIG = {
     "version": 1,
