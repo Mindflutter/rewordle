@@ -7,25 +7,10 @@ from sqlalchemy.exc import NoResultFound
 
 from db.game import Game
 from rewordle.models import NOT_FOUND_RESPONSE, GuessAttemptResponse, GuessPayload, StartGameResponse
+from settings import WORDS
 
 router = APIRouter(prefix="/rewordle")
 logger = logging.getLogger(__name__)
-
-WORDS = [
-    "point",
-    "joint",
-    "yeast",
-    "trust",
-    "moist",
-    "audio",
-    "adieu",
-    "weird",
-    "solar",
-    "clear",
-    "creep",
-    "creed",
-    "agony",
-]
 
 
 @router.post("/start", status_code=201, response_model=StartGameResponse)
@@ -48,13 +33,13 @@ async def guess_attempt(guess_payload: GuessPayload, game_id: int = Path(None, g
         logger.error(f"Game id {game_id} not found")
         return JSONResponse(status_code=404, content={"message": f"Game id {game_id} not found"})
 
-    response_dict = {}
+    response_list = []
     for guess_char, secret_char in zip(guess_word, secret_word):
         if guess_char == secret_char:
-            response_dict[guess_char] = "green"
+            response_list.append("green")
         elif guess_char in secret_word:
-            response_dict[guess_char] = "yellow"
+            response_list.append("yellow")
         else:
-            response_dict[guess_char] = "gray"
+            response_list.append("gray")
 
-    return response_dict
+    return response_list
