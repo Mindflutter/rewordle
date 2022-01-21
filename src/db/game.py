@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Integer, SmallInteger, String, select
+from sqlalchemy import Column, DateTime, Integer, SmallInteger, String, select, update
 
 from db.database import db
 from db.model_base import Base
@@ -37,8 +37,9 @@ class Game(Base):
         async with db.session_maker() as session:
             await cls.check_game_exists(session, game_id)
 
-            # TODO: increment attempt here
-            query = select(Game.word).where(Game.id == game_id)
+            # get secret word, update attempts counter
+            query = update(Game).where(Game.id == game_id).values(attempts=Game.attempts + 1).returning(Game.word)
             results = await session.execute(query)
             (result,) = results.one()
+            await session.commit()
             return result
